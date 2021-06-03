@@ -94,14 +94,14 @@ function applyGutters(areas: Area[]) {
  * @returns The Uri for the SVG icon
  */
 function createIcon(color: string): Uri {
-  const lineHeight = vscode.workspace.getConfiguration('editor').lineHeight;
+  const height = 100; // Height of the decoration must be larger than the lineHeight
   const width = 2;
-  const offset = lineHeight - width; // right-aligned
-  const transparency = 99;
+  const offset = 12; // Offset can't be too large or it will exceed the gutter width
+  const transparency = 77;
 
   const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" height="${lineHeight}" width="${lineHeight}">` +
-    `<rect x="${offset}" y="0" width="${width}" height="100" style="fill: ${color}${transparency};"></rect>;` +
+    `<svg xmlns="http://www.w3.org/2000/svg">` +
+    `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${transparency};"></rect>;` +
     `</svg>`;
 
   const encodedSVG = encodeURIComponent(svg);
