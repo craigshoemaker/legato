@@ -1,26 +1,65 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { updateDecorations } from './gutters';
+import { Logger } from './logging';
+import { State } from './models';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  State.extensionContext = context;
+  Logger.info('Starting up Legato', false, 'Legato');
+  let { activeTextEditor } = vscode.window;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "legato" is now active!');
+  addSubscriptions();
+  addEventHandlers();
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('legato.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
+  // context.subscriptions.push(disposable);
 
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Legato!');
-	});
+  if (activeTextEditor) {
+    triggerUpdateDecorations();
+  }
+}
 
-	context.subscriptions.push(disposable);
+let timeout: NodeJS.Timer | undefined = undefined;
+
+function addEventHandlers() {
+  const { extensionContext: context } = State;
+  let { activeTextEditor } = vscode.window;
+
+  vscode.window.onDidChangeActiveTextEditor(
+    (editor) => {
+      activeTextEditor = editor;
+      if (editor) {
+        triggerUpdateDecorations();
+      }
+    },
+    null,
+    context.subscriptions
+  );
+
+  vscode.workspace.onDidChangeTextDocument(
+    (event) => {
+      if (activeTextEditor && event.document === activeTextEditor.document) {
+        triggerUpdateDecorations();
+      }
+    },
+    null,
+    context.subscriptions
+  );
+}
+
+function triggerUpdateDecorations() {
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = undefined;
+  }
+  timeout = setTimeout(updateDecorations, 500);
+}
+
+function addSubscriptions() {
+  State.extensionContext.subscriptions.push(Logger.getChannel());
 }
 
 // this method is called when your extension is deactivated
