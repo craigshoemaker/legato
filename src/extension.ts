@@ -29,24 +29,24 @@ function addEventHandlers() {
   let { activeTextEditor } = vscode.window;
 
   vscode.window.onDidChangeActiveTextEditor(
-    (editor) => {
+    editor => {
       activeTextEditor = editor;
       if (editor) {
         triggerUpdateDecorations();
       }
     },
     null,
-    context.subscriptions
+    context.subscriptions,
   );
 
   vscode.workspace.onDidChangeTextDocument(
-    (event) => {
+    event => {
       if (activeTextEditor && event.document === activeTextEditor.document) {
         triggerUpdateDecorations();
       }
     },
     null,
-    context.subscriptions
+    context.subscriptions,
   );
 }
 

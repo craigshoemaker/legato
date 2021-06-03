@@ -10,3 +10,8 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+.eslintrc
+.prettierrc
+.prettierrc.js
+webpack.config.js
