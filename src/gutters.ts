@@ -82,7 +82,7 @@ function getColor() {
  */
 function applyGutters(areas: Area[]) {
   let { activeTextEditor } = vscode.window;
-  areas.forEach((area) => {
+  areas.forEach(area => {
     scopeDecorations.push(area.decorationType);
     activeTextEditor?.setDecorations(area.decorationType, [area.decorationOptions]);
   });
@@ -128,7 +128,7 @@ function disposeScopeDecorations() {
  */
 function extendAreaToCoverEntireRange(areas: Area[]) {
   let previousArea: Area;
-  areas.forEach((area) => {
+  areas.forEach(area => {
     const { line } = area.decorationOptions.range.start;
 
     if (previousArea) {
