@@ -6,6 +6,6 @@ export enum GutterSVGs {
 export enum AllSettings {
   gutterIndicatorHeight = 'gutterIndicatorHeight',
   gutterIndicatorOffset = 'gutterIndicatorOffset',
-  gutterIndicatorTransparency = 'gutterIndicatorTransparency',
+  gutterIndicatorOpacity = 'gutterIndicatorOpacity',
   gutterIndicatorWidth = 'gutterIndicatorWidth',
 }

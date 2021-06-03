@@ -3,7 +3,7 @@ import { Uri } from 'vscode';
 import {
   getGutterIndicatorHeight,
   getGutterIndicatorOffset,
-  getGutterIndicatorTransparency,
+  getGutterIndicatorOpacity,
   getGutterIndicatorWidth,
 } from './configuration';
 import { Logger } from './logging';
@@ -105,7 +105,7 @@ function createIcon(color: string, gutterSVG: GutterSVGs): Uri {
   const height = getGutterIndicatorHeight();
   const width = getGutterIndicatorWidth();
   const offset = getGutterIndicatorOffset();
-  const transparency = getGutterIndicatorTransparency();
+  const opacity = getGutterIndicatorOpacity();
   let svg = '';
 
   switch (gutterSVG) {
@@ -114,15 +114,15 @@ function createIcon(color: string, gutterSVG: GutterSVGs): Uri {
         `<svg xmlns="http://www.w3.org/2000/svg">` +
         `<rect x="${offset + width}" y="0" width="${
           height - width
-        }" height="${width}" style="fill: ${color}${transparency};"></rect>;` +
-        `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${transparency};"></rect>;` +
+        }" height="${width}" style="fill: ${color}${opacity};"></rect>;` +
+        `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${opacity};"></rect>;` +
         `</svg>`;
       break;
 
     case GutterSVGs.defaultIcon:
       svg =
         `<svg xmlns="http://www.w3.org/2000/svg">` +
-        `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${transparency};"></rect>;` +
+        `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${opacity};"></rect>;` +
         `</svg>`;
       break;
   }

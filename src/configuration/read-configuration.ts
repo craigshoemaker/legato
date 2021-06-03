@@ -9,9 +9,14 @@ export function getGutterIndicatorOffset() {
   return readConfiguration<number>(AllSettings.gutterIndicatorOffset);
 }
 
-export function getGutterIndicatorTransparency() {
-  const percentage = readConfiguration<number>(AllSettings.gutterIndicatorTransparency);
-  const hex = Math.floor((percentage * 255) / 100).toString(16);
+export function getGutterIndicatorOpacity() {
+  const percentage = readConfiguration<number>(AllSettings.gutterIndicatorOpacity);
+  let hex = Math.floor((percentage * 255) / 100).toString(16);
+
+  if (hex.length === 1) {
+    hex = `0${hex}`;
+  }
+
   return hex;
 }
 
