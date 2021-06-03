@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
 import { Uri } from 'vscode';
+import {
+  getGutterIndicatorHeight,
+  getGutterIndicatorOffset,
+  getGutterIndicatorTransparency,
+  getGutterIndicatorWidth,
+} from './configuration';
 import { Logger } from './logging';
 import { Area, colors, GutterSVGs } from './models';
 
