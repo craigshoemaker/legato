@@ -20,7 +20,32 @@
     "*"
   ],
   "main": "./out/extension.js",
-  "contributes": {},
+  "contributes": {
+    "configuration": {
+      "properties": {
+        "legato.gutterIndicatorHeight": {
+          "type": "number",
+          "default": 100,
+          "description": "The height the of gutter indicator."
+        },
+        "legato.gutterIndicatorOffset": {
+          "type": "number",
+          "default": 12,
+          "description": "The offset from the left for the gutter indicator."
+        },
+        "legato.gutterIndicatorTransparency": {
+          "type": "number",
+          "default": 60,
+          "description": "The transparency percentage of the gutter indicator."
+        },
+        "legato.gutterIndicatorWidth": {
+          "type": "number",
+          "default": 4,
+          "description": "The width the of gutter indicator."
+        }
+      }
+    }
+  },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
