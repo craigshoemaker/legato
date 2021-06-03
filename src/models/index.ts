@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { extensionId } from './constants';
 
 export * from './constants';
+export * from './enums';
 export * from './interfaces';
 export * from './state';
 

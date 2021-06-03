@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 export const extensionShortName = 'legato';
 export const extensionId = 'craigshoemaker.vscode-legato';
+export const legatoSection = 'legato';
 
 // export const timeout = async (ms = 200) => new Promise((resolve) => setTimeout(resolve, ms));
 

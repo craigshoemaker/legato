@@ -1,5 +1,11 @@
 import * as vscode from 'vscode';
 import { Uri } from 'vscode';
+import {
+  getGutterIndicatorHeight,
+  getGutterIndicatorOffset,
+  getGutterIndicatorTransparency,
+  getGutterIndicatorWidth,
+} from './configuration';
 import { Logger } from './logging';
 import { Area, colors } from './models';
 
@@ -94,10 +100,10 @@ function applyGutters(areas: Area[]) {
  * @returns The Uri for the SVG icon
  */
 function createIcon(color: string): Uri {
-  const height = 100; // Height of the decoration must be larger than the lineHeight
-  const width = 2;
-  const offset = 12; // Offset can't be too large or it will exceed the gutter width
-  const transparency = 77;
+  const height = getGutterIndicatorHeight();
+  const width = getGutterIndicatorWidth();
+  const offset = getGutterIndicatorOffset();
+  const transparency = getGutterIndicatorTransparency();
 
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg">` +
