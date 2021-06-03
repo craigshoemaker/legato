@@ -31,11 +31,13 @@
         "legato.gutterIndicatorOffset": {
           "type": "number",
           "default": 12,
+          "maximum": 14,
           "description": "The offset from the left for the gutter indicator."
         },
         "legato.gutterIndicatorTransparency": {
           "type": "number",
           "default": 60,
+          "maximum": 100,
           "description": "The transparency percentage of the gutter indicator."
         },
         "legato.gutterIndicatorWidth": {
