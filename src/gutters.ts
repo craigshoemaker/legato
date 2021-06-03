@@ -6,6 +6,27 @@ import { Area, colors } from './models';
 let nextColorIndex = 0;
 let scopeDecorations: vscode.TextEditorDecorationType[] = [];
 
+const patterns = {
+  metadata: /---[\S\s].*:[.\S\s]*?---[\S\s]/,
+  tabs: /# \[(.*)\]|---[\n\r]/gi,
+  zones: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi
+};
+
+function getSectionPattern(text: string, patterns: any) {
+  let pattern;
+
+  if(patterns.tabs.test(text)) {
+    pattern = patterns.tabs;
+  } else if(patterns.zones.test(text)) {
+    pattern = patterns.zones;
+  } else {
+    pattern = false;
+  }
+
+  return pattern;
+}
+
+
 /**
  * @description Find the matches for the tokens. Create a range using the line numbers. Then decorate the range using the pre-defined colors.
  */
@@ -18,9 +39,9 @@ export function updateDecorations() {
     return;
   }
 
-  const regEx = /# \[(.*)\]|---/gi;
   const fileName = activeTextEditor.document.fileName;
   const text = activeTextEditor.document.getText();
+  const regEx = getSectionPattern(text, patterns);
   let areas: Area[] = [];
   let match;
   Logger.info(`Setting Gutters to ${fileName}`);
@@ -52,10 +73,12 @@ function getDecorations(activeTextEditor: vscode.TextEditor, match: RegExpExecAr
   const startPos = positionAt(match.index);
   const endPos = positionAt(match.index + match[0].length);
 
+  const hoverMessage = match.length > 1 ? match[1] : match[0];
+
   // Create the deco options using the range.
   const decorationOptions = {
     range: new vscode.Range(startPos, endPos),
-    hoverMessage: match[0],
+    hoverMessage: hoverMessage,
   };
 
   // Set the color for the gutterIcon to rotate through our color constants.
