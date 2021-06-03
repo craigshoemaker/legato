@@ -3,7 +3,6 @@ import { Uri } from 'vscode';
 import { Logger } from './logging';
 import { Area, colors } from './models';
 
-let { activeTextEditor } = vscode.window;
 let nextColorIndex = 0;
 let scopeDecorations: vscode.TextEditorDecorationType[] = [];
 
@@ -11,6 +10,7 @@ let scopeDecorations: vscode.TextEditorDecorationType[] = [];
  * @description Find the matches for the tokens. Create a range using the line numbers. Then decorate the range using the pre-defined colors.
  */
 export function updateDecorations() {
+  let { activeTextEditor } = vscode.window;
   disposeScopeDecorations();
   nextColorIndex = 0;
 
@@ -18,12 +18,12 @@ export function updateDecorations() {
     return;
   }
 
-  Logger.info('Setting Gutters');
-
   const regEx = /# \[(.*)\]|---/gi;
+  const fileName = activeTextEditor.document.fileName;
   const text = activeTextEditor.document.getText();
   let areas: Area[] = [];
   let match;
+  Logger.info(`Setting Gutters to ${fileName}`);
 
   let skipper = 0;
   while ((match = regEx.exec(text))) {
@@ -81,6 +81,7 @@ function getColor() {
  * @param areas The areas (ranges and decorations) to apply to the gutters
  */
 function applyGutters(areas: Area[]) {
+  let { activeTextEditor } = vscode.window;
   areas.forEach((area) => {
     scopeDecorations.push(area.decorationType);
     activeTextEditor?.setDecorations(area.decorationType, [area.decorationOptions]);
