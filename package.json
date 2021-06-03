@@ -28,6 +28,7 @@
     "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
+    "pretty": "npx prettier@2 src/. --write",
     "package": "npx vsce package",
     "publish": "npx vsce publish"
   },
