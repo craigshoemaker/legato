@@ -81,8 +81,8 @@ function applyGutters(areas: Area[]) {
  */
 function createIcon(color: string): Uri {
   const lineHeight = vscode.workspace.getConfiguration('editor').lineHeight;
-  const offset = 10;
-  const width = 3;
+  const width = 2;
+  const offset = lineHeight - width; // right-aligned
   const transparency = 99;
 
   const svg =
