@@ -2,7 +2,14 @@
   "name": "legato",
   "displayName": "Legato",
   "description": "Visualizing content inside Microsoft Docs content switchers",
+  "publisher": "craigshoemaker",
+  "license": "SEE LICENSE IN LICENSE.md",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/craigshoemaker/legato.git"
+  },
+  "homepage": "https://github.com/craigshoemaker/legato/blob/main/README.md",
   "engines": {
     "vscode": "^1.56.0"
   },
