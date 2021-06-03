@@ -166,10 +166,6 @@ function extendAreaToCoverEntireRange(areas: Area[]) {
 
       areas.push({ decorationOptions, decorationType, color });
     }
-    // if (previousArea) {
-    //   const { line: startLine } = previousArea.decorationOptions.range.start;
-    //   previousArea.decorationOptions.range = new vscode.Range(startLine, 0, line - 1, 0);
-    // }
 
     previousArea = area;
   });
