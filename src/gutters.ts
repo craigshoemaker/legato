@@ -102,10 +102,10 @@ function applyGutters(areas: Area[]) {
  * @returns The Uri for the SVG icon
  */
 function createIcon(color: string, gutterSVG: GutterSVGs): Uri {
-  const height = 100; // Height of the decoration must be larger than the lineHeight
-  const width = 4;
-  const offset = 12; // Offset can't be too large or it will exceed the gutter width
-  const transparency = 99;
+  const height = getGutterIndicatorHeight();
+  const width = getGutterIndicatorWidth();
+  const offset = getGutterIndicatorOffset();
+  const transparency = getGutterIndicatorTransparency();
   let svg = '';
 
   switch (gutterSVG) {
