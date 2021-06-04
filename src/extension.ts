@@ -1,7 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { workspace } from 'vscode';
 import { updateDecorations } from './gutters';
 import { Logger } from './logging';
 import { State } from './models';
@@ -37,7 +36,7 @@ function addEventHandlers() {
       activeTextEditor = editor;
       if (editor) {
         triggerUpdateDecorations();
-        // updateStatusBarItem();
+        updateStatusBarItem();
       }
     },
     null,
@@ -47,7 +46,7 @@ function addEventHandlers() {
   vscode.workspace.onDidChangeTextDocument(
     event => {
       if (activeTextEditor && event.document === activeTextEditor.document) {
-        // triggerUpdateDecorations();
+        triggerUpdateDecorations();
       }
     },
     null,
