@@ -14,7 +14,7 @@ import {
 } from './configuration';
 import { isValidFile } from './document';
 import { Logger } from './logging';
-import { Area, colors, GutterSVGs, getPattern, Decoration, Switchers, patterns } from './models';
+import { colors, GutterSVGs, getPattern, AreaDecoration, Switchers, patterns } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: TextEditorDecorationType[] = [];
@@ -51,21 +51,27 @@ function updateDecorations() {
   const pattern = getPattern(text);
   const regEx = pattern.regex;
   regEx.lastIndex = 0; // Reset for searching
-  let areas: Area[] = [];
+  let decorations: AreaDecoration[] = [];
   let match;
 
   Logger.info(`Decorating gutters on: ${fileName}`);
 
   if (pattern.getDecorations) {
     while ((match = regEx.exec(text))) {
-      const { decorationOptions, decorationType, color } = pattern.getDecorations(
+      const { decorationOptions, decorationType, color, isEnd } = pattern.getDecorations(
         activeTextEditor,
         match,
       );
-      areas.push({ decorationOptions, decorationType, color });
+      const decoration: AreaDecoration = {
+        decorationOptions,
+        decorationType,
+        color,
+        isEnd,
+      };
+      decorations.push(decoration);
     }
-    areas = extendAreaToCoverEntireRange(areas);
-    applyGutters(areas);
+    decorations = extendAreaToCoverEntireRange(decorations);
+    applyGutters(decorations);
   }
 }
 
@@ -92,13 +98,17 @@ function setDecorationFunctions() {
  * @param match The regEx to match
  * @returns
  */
-function getDecorationsForZones(activeTextEditor: TextEditor, match: RegExpExecArray): Decoration {
+function getDecorationsForZones(
+  activeTextEditor: TextEditor,
+  match: RegExpExecArray,
+): AreaDecoration {
   // TODO: implement decorations for zone pivots
   const { positionAt } = activeTextEditor.document;
   const startPos = positionAt(match.index);
   const endPos = positionAt(match.index + match[0].length - 1);
 
   const hoverMessage = match.length > 1 ? match[1] : match[0];
+  const isEnd = !hoverMessage;
 
   // Create the deco options using the range.
   const decorationOptions: DecorationOptions = {
@@ -114,10 +124,11 @@ function getDecorationsForZones(activeTextEditor: TextEditor, match: RegExpExecA
     gutterIconSize: 'auto',
   });
 
-  const decoration: Decoration = {
+  const decoration: AreaDecoration = {
     decorationOptions,
     decorationType,
     color,
+    isEnd,
   };
   return decoration;
 }
@@ -128,12 +139,16 @@ function getDecorationsForZones(activeTextEditor: TextEditor, match: RegExpExecA
  * @param match The regEx to match
  * @returns
  */
-function getDecorationsForTabs(activeTextEditor: TextEditor, match: RegExpExecArray): Decoration {
+function getDecorationsForTabs(
+  activeTextEditor: TextEditor,
+  match: RegExpExecArray,
+): AreaDecoration {
   const { positionAt } = activeTextEditor.document;
   const startPos = positionAt(match.index);
   const endPos = positionAt(match.index + match[0].length - 1);
 
   const hoverMessage = match.length > 1 ? match[1] : match[0];
+  const isEnd = !hoverMessage;
 
   // Create the deco options using the range.
   const decorationOptions: DecorationOptions = {
@@ -149,7 +164,13 @@ function getDecorationsForTabs(activeTextEditor: TextEditor, match: RegExpExecAr
     gutterIconSize: 'auto',
   });
 
-  return { decorationOptions, decorationType, color };
+  const decoration: AreaDecoration = {
+    decorationOptions,
+    decorationType,
+    color,
+    isEnd,
+  };
+  return decoration;
 }
 
 /**
@@ -164,11 +185,11 @@ function getColor() {
 
 /**
  * @description Sets the decorations to the gutter.
- * @param areas The areas (ranges and decorations) to apply to the gutters
+ * @param decorations The areas (ranges and decorations) to apply to the gutters
  */
-function applyGutters(areas: Area[]) {
+function applyGutters(decorations: AreaDecoration[]) {
   let { activeTextEditor } = window;
-  areas.forEach(area => {
+  decorations.forEach(area => {
     scopeDecorations.push(area.decorationType);
     activeTextEditor?.setDecorations(area.decorationType, [area.decorationOptions]);
   });
@@ -224,15 +245,15 @@ function disposeScopeDecorations() {
 
 /**
  * @description Extend the ranges of each match in the array to the next match. This is what decorates the entire range in the gutter.
- * @param areas array of the styles and ranges for the gutter
+ * @param decorations array of the styles and ranges for the gutter
  * @returns a fresh copy of the areas array
  */
-function extendAreaToCoverEntireRange(areas: Area[]) {
-  let previousArea: Area;
-  areas.forEach(area => {
+function extendAreaToCoverEntireRange(decorations: AreaDecoration[]) {
+  let previousArea: AreaDecoration;
+  decorations.forEach(area => {
     const { line } = area.decorationOptions.range.start;
 
-    if (previousArea) {
+    if (previousArea && !previousArea.isEnd) {
       const { line: startLine } = previousArea.decorationOptions.range.start;
 
       // Create the deco options using the range.
@@ -242,16 +263,23 @@ function extendAreaToCoverEntireRange(areas: Area[]) {
       };
 
       // Set the color for the gutterIcon to rotate through our color constants.
-      const { color } = previousArea;
+      const { color, isEnd } = previousArea;
       const decorationType = window.createTextEditorDecorationType({
         gutterIconPath: createIcon(color, GutterSVGs.defaultIcon),
         gutterIconSize: 'auto',
       });
 
-      areas.push({ decorationOptions, decorationType, color });
+      const decoration: AreaDecoration = {
+        decorationOptions,
+        decorationType,
+        color,
+        isEnd,
+      };
+
+      decorations.push(decoration);
     }
 
     previousArea = area;
   });
-  return areas;
+  return decorations;
 }
