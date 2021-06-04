@@ -28,8 +28,3 @@ export interface AreaPattern {
   name: SwitcherTypes;
   getDecorations?: DecoratorFunction;
 }
-
-export interface AreaPatternTypes {
-  tabs: AreaPattern;
-  zones: AreaPattern;
-}

@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { SwitcherTypes } from './enums';
-import { AreaPattern, AreaPatternTypes } from './interfaces';
+import { AreaPattern } from './interfaces';
 
-export const patternTypes: AreaPatternTypes = {
+export const patternTypes = {
   tabs: {
     /*
       A two part expression, separated by the OR (|) operator.
@@ -38,7 +38,7 @@ export const patternTypes: AreaPatternTypes = {
     name: SwitcherTypes.tabs,
   },
   zones: {
-    regex: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi,
+    regex: /::: ?zone.pivot="(.*)"[\S\s.]|::: ?zone-end/gi,
     name: SwitcherTypes.zones,
   },
 };
