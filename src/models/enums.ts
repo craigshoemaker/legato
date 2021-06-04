@@ -12,5 +12,5 @@ export enum AllSettings {
 
 export enum SwitcherTypes {
   tabs = 'tabs',
-  zones = 'zones'
+  zones = 'zones',
 }

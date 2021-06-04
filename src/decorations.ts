@@ -25,27 +25,25 @@ export function triggerUpdateDecorations() {
 const patterns = {
   tabs: {
     regex: /# \[(.*)\]|(?<=#)---[\n\r]/gi,
-    name: SwitcherTypes.tabs
+    name: SwitcherTypes.tabs,
   },
   zones: {
     regex: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi,
-    name: SwitcherTypes.zones
-  }
+    name: SwitcherTypes.zones,
+  },
 };
 
 function getPattern(text: string, patterns: any) {
-
   let pattern = {};
 
-  if(patterns.tabs.regex.test(text)) {
+  if (patterns.tabs.regex.test(text)) {
     pattern = patterns.tabs;
-  } else if(patterns.zones.regex.test(text)) {
+  } else if (patterns.zones.regex.test(text)) {
     pattern = patterns.zones;
   }
 
   return pattern;
 }
-
 
 /**
  * @description Find the matches for the tokens. Create a range using the line numbers. Then decorate the range using the pre-defined colors.
@@ -71,12 +69,14 @@ function updateDecorations() {
 
   const decorator: any = {
     tabs: getDecorationsForTabs,
-    zones: getDecorationsForZones
+    zones: getDecorationsForZones,
   };
 
   while ((match = regEx.exec(text))) {
-
-    const { decorationOptions, decorationType, color } = decorator[pattern.name](activeTextEditor, match);
+    const { decorationOptions, decorationType, color } = decorator[pattern.name](
+      activeTextEditor,
+      match,
+    );
     areas.push({ decorationOptions, decorationType, color });
   }
   areas = extendAreaToCoverEntireRange(areas);
@@ -89,9 +89,9 @@ function updateDecorations() {
  * @param match The regEx to match
  * @returns
  */
- function getDecorationsForZones(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
-   // TODO: implement decorations for zone pivots
- }
+function getDecorationsForZones(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
+  // TODO: implement decorations for zone pivots
+}
 
 /**
  * @description Find the start and end positions where we match the regEx for the tab area.
