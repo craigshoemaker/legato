@@ -16,6 +16,7 @@ export interface AreaDecoration {
 export type DecoratorFunction = (
   activeTextEditor: vscode.TextEditor,
   match: RegExpExecArray,
+  previousDecoration?: AreaDecoration,
 ) => AreaDecoration;
 
 export interface AreaPattern {

@@ -57,11 +57,13 @@ function updateDecorations() {
 
   Logger.info(`Decorating gutters on: ${fileName}`);
 
+  let previousDecoration = undefined;
   if (pattern.getDecorations) {
     while ((match = regEx.exec(text))) {
       const { decorationOptions, decorationType, color, isEnd } = pattern.getDecorations(
         activeTextEditor,
         match,
+        previousDecoration,
       );
       const decoration: AreaDecoration = {
         decorationOptions,
@@ -70,6 +72,7 @@ function updateDecorations() {
         isEnd,
       };
       decorations.push(decoration);
+      previousDecoration = decoration;
     }
     decorations = extendAreaToCoverEntireRange(decorations);
     applyGutters(decorations);
@@ -105,6 +108,7 @@ function setDecorationFunctions() {
 function getDecorationsForZones(
   activeTextEditor: TextEditor,
   match: RegExpExecArray,
+  previousDecoration?: AreaDecoration,
 ): AreaDecoration {
   // TODO: implement decorations for zone pivots
   const { positionAt } = activeTextEditor.document;
@@ -120,7 +124,7 @@ function getDecorationsForZones(
     hoverMessage: hoverMessage,
   };
 
-  const color = getColor();
+  const color = (isEnd ? previousDecoration?.color : getColor()) ?? getColor();
 
   // Set the color for the gutterIcon to rotate through our color constants.
   const decorationType = window.createTextEditorDecorationType({
@@ -146,6 +150,7 @@ function getDecorationsForZones(
 function getDecorationsForTabs(
   activeTextEditor: TextEditor,
   match: RegExpExecArray,
+  previousDecoration?: AreaDecoration,
 ): AreaDecoration {
   const { positionAt } = activeTextEditor.document;
   const startPos = positionAt(match.index);
