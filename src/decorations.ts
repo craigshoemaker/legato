@@ -1,3 +1,4 @@
+import { ServerStreamFileResponseOptionsWithError } from 'http2';
 import {
   DecorationOptions,
   Range,
@@ -80,7 +81,7 @@ function updateDecorations() {
  */
 function setDecorationFunctions() {
   for (const key in Switchers) {
-    patterns[Switchers.tabs].getDecorations = getDecorationsFunction(key as Switchers);
+    patterns[key as Switchers].getDecorations = getDecorationsFunction(key as Switchers);
   }
 
   function getDecorationsFunction(switcherType: Switchers) {
