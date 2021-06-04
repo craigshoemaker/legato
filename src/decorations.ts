@@ -73,6 +73,7 @@ function updateDecorations() {
       break;
   }
 
+  regEx.lastIndex = 0;
   while ((match = regEx.exec(text))) {
     const { decorationOptions, decorationType, color } = pattern.getDecorations(
       activeTextEditor,
@@ -80,7 +81,7 @@ function updateDecorations() {
     );
     areas.push({ decorationOptions, decorationType, color });
   }
-  areas = extendAreaToCoverEntireRange(areas);
+  // areas = extendAreaToCoverEntireRange(areas);
   applyGutters(areas);
 }
 
