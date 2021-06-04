@@ -14,11 +14,13 @@ import {
 } from './configuration';
 import { isValidFile } from './document';
 import { Logger } from './logging';
-import { Area, colors, GutterSVGs, getPattern, Decoration, Switchers } from './models';
+import { Area, colors, GutterSVGs, getPattern, Decoration, Switchers, patterns } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: TextEditorDecorationType[] = [];
 let timeout: NodeJS.Timer | undefined = undefined;
+
+setDecorationFunctions();
 
 /**
  * @description Trigger the decorations after a timeout delay
@@ -54,33 +56,33 @@ function updateDecorations() {
 
   Logger.info(`Decorating gutters on: ${fileName}`);
 
-  pattern.getDecorations = getDecorationsFunction(pattern.name);
-
-  while ((match = regEx.exec(text))) {
-    const { decorationOptions, decorationType, color } = pattern.getDecorations(
-      activeTextEditor,
-      match,
-    );
-    areas.push({ decorationOptions, decorationType, color });
+  if (pattern.getDecorations) {
+    while ((match = regEx.exec(text))) {
+      const { decorationOptions, decorationType, color } = pattern.getDecorations(
+        activeTextEditor,
+        match,
+      );
+      areas.push({ decorationOptions, decorationType, color });
+    }
+    areas = extendAreaToCoverEntireRange(areas);
+    applyGutters(areas);
   }
-  areas = extendAreaToCoverEntireRange(areas);
-  applyGutters(areas);
 }
 
-/**
- *
- * @description Determine and return the appropriate decoration function
- * @param switcherType The type of switcher that we'll decorate
- * @returns the appropriate function for the switcher
- */
-function getDecorationsFunction(switcherType: Switchers) {
-  switch (switcherType) {
-    case Switchers.zones:
-      return getDecorationsForZones;
+function setDecorationFunctions() {
+  for (const key in Switchers) {
+    patterns[Switchers.tabs].getDecorations = getDecorationsFunction(key as Switchers);
+  }
 
-    case Switchers.tabs:
-    default:
-      return getDecorationsForTabs;
+  function getDecorationsFunction(switcherType: Switchers) {
+    switch (switcherType) {
+      case Switchers.zones:
+        return getDecorationsForZones;
+
+      case Switchers.tabs:
+      default:
+        return getDecorationsForTabs;
+    }
   }
 }
 

@@ -2,7 +2,12 @@ import * as vscode from 'vscode';
 import { Switchers } from './enums';
 import { AreaPattern } from './interfaces';
 
-const patternTypes = {
+type PatternSetType = {
+  tabs: AreaPattern;
+  zones: AreaPattern;
+};
+
+export const patterns: PatternSetType = {
   tabs: {
     /*
       A two part expression, separated by the OR (|) operator.
@@ -44,7 +49,7 @@ const patternTypes = {
 };
 
 export function getPattern(text: string) {
-  const { tabs, zones } = patternTypes;
+  const { tabs, zones } = patterns;
   let areaPattern: AreaPattern = tabs; // default
 
   if (tabs.regex.test(text)) {
