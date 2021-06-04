@@ -3,11 +3,11 @@ import { Uri } from 'vscode';
 import {
   getGutterIndicatorHeight,
   getGutterIndicatorOffset,
-  getGutterIndicatorTransparency,
+  getGutterIndicatorOpacity,
   getGutterIndicatorWidth,
 } from './configuration';
 import { Logger } from './logging';
-import { Area, colors } from './models';
+import { Area, colors, GutterSVGs } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: vscode.TextEditorDecorationType[] = [];
@@ -40,8 +40,8 @@ export function updateDecorations() {
       continue;
     }
 
-    const { decorationOptions, decorationType } = getDecorations(activeTextEditor, match);
-    areas.push({ decorationOptions, decorationType });
+    const { decorationOptions, decorationType, color } = getDecorations(activeTextEditor, match);
+    areas.push({ decorationOptions, decorationType, color });
   }
   areas = extendAreaToCoverEntireRange(areas);
   applyGutters(areas);
@@ -64,12 +64,14 @@ function getDecorations(activeTextEditor: vscode.TextEditor, match: RegExpExecAr
     hoverMessage: match[0],
   };
 
+  const color = getColor();
+
   // Set the color for the gutterIcon to rotate through our color constants.
   const decorationType = vscode.window.createTextEditorDecorationType({
-    gutterIconPath: createIcon(getColor()),
+    gutterIconPath: createIcon(color, GutterSVGs.startIcon),
     gutterIconSize: 'auto',
   });
-  return { decorationOptions, decorationType };
+  return { decorationOptions, decorationType, color };
 }
 
 /**
@@ -99,16 +101,31 @@ function applyGutters(areas: Area[]) {
  * @param color Icon color
  * @returns The Uri for the SVG icon
  */
-function createIcon(color: string): Uri {
+function createIcon(color: string, gutterSVG: GutterSVGs): Uri {
   const height = getGutterIndicatorHeight();
   const width = getGutterIndicatorWidth();
   const offset = getGutterIndicatorOffset();
-  const transparency = getGutterIndicatorTransparency();
+  const opacity = getGutterIndicatorOpacity();
+  let svg = '';
 
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg">` +
-    `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${transparency};"></rect>;` +
-    `</svg>`;
+  switch (gutterSVG) {
+    case GutterSVGs.startIcon:
+      svg =
+        `<svg xmlns="http://www.w3.org/2000/svg">` +
+        `<rect x="${offset + width}" y="0" width="${
+          height - width
+        }" height="${width}" style="fill: ${color}${opacity};"></rect>;` +
+        `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${opacity};"></rect>;` +
+        `</svg>`;
+      break;
+
+    case GutterSVGs.defaultIcon:
+      svg =
+        `<svg xmlns="http://www.w3.org/2000/svg">` +
+        `<rect x="${offset}" y="0" width="${width}" height="${height}" style="fill: ${color}${opacity};"></rect>;` +
+        `</svg>`;
+      break;
+  }
 
   const encodedSVG = encodeURIComponent(svg);
   const URI = 'data:image/svg+xml;utf8,' + encodedSVG;
@@ -139,7 +156,21 @@ function extendAreaToCoverEntireRange(areas: Area[]) {
 
     if (previousArea) {
       const { line: startLine } = previousArea.decorationOptions.range.start;
-      previousArea.decorationOptions.range = new vscode.Range(startLine, 0, line - 1, 0);
+
+      // Create the deco options using the range.
+      const decorationOptions = {
+        range: new vscode.Range(startLine + 1, 0, line - 1, 0),
+        hoverMessage: previousArea.decorationOptions.hoverMessage,
+      };
+
+      // Set the color for the gutterIcon to rotate through our color constants.
+      const { color } = previousArea;
+      const decorationType = vscode.window.createTextEditorDecorationType({
+        gutterIconPath: createIcon(color, GutterSVGs.defaultIcon),
+        gutterIconSize: 'auto',
+      });
+
+      areas.push({ decorationOptions, decorationType, color });
     }
 
     previousArea = area;

@@ -24,22 +24,24 @@
     "configuration": {
       "properties": {
         "legato.gutterIndicatorHeight": {
-          "type": "number",
+          "type": "integer",
           "default": 100,
           "description": "The height the of gutter indicator."
         },
         "legato.gutterIndicatorOffset": {
-          "type": "number",
+          "type": "integer",
           "default": 12,
+          "maximum": 14,
           "description": "The offset from the left for the gutter indicator."
         },
-        "legato.gutterIndicatorTransparency": {
-          "type": "number",
+        "legato.gutterIndicatorOpacity": {
+          "type": "integer",
           "default": 60,
-          "description": "The transparency percentage of the gutter indicator."
+          "maximum": 100,
+          "description": "The opacity percentage of the gutter indicator."
         },
         "legato.gutterIndicatorWidth": {
-          "type": "number",
+          "type": "integer",
           "default": 4,
           "description": "The width the of gutter indicator."
         }

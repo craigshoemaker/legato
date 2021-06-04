@@ -1,6 +1,11 @@
+export enum GutterSVGs {
+  startIcon,
+  defaultIcon,
+}
+
 export enum AllSettings {
-  GutterIndicatorHeight = 'gutterIndicatorHeight',
-  GutterIndicatorOffset = 'gutterIndicatorOffset',
-  GutterIndicatorTransparency = 'gutterIndicatorTransparency',
-  GutterIndicatorWidth = 'gutterIndicatorWidth',
+  gutterIndicatorHeight = 'gutterIndicatorHeight',
+  gutterIndicatorOffset = 'gutterIndicatorOffset',
+  gutterIndicatorOpacity = 'gutterIndicatorOpacity',
+  gutterIndicatorWidth = 'gutterIndicatorWidth',
 }
