@@ -1,38 +1,72 @@
 import * as vscode from 'vscode';
-import { State } from './models';
+import { Tab } from './models';
 
 const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
 
-export const getStatusBarItem = () => {
-    updateStatusBarItem();
-    return myStatusBarItem;
-}
-
+/**
+ * @description Update StatusBarItem with name of active tab, otherwise hide.
+ * @returns
+ */
 export function updateStatusBarItem() {
 
-    const sbi = myStatusBarItem;
-
+	const tabs = getTabs();
     const n = getLineNumber(vscode.window.activeTextEditor);
 
-	if (10 <= n && n <= 100) {
-		sbi.text = `$(milestone) Line: ${n}`;
-		sbi.show();
-	} else {
-		clearStatusBarItem();
+	for (let i = 0; i < tabs.length - 1; i++) {
+		if (tabs[i].line <= n && n < tabs[i+1].line) {
+			if (tabs[i].text) {
+				myStatusBarItem.text = `$(milestone) Tab: ${tabs[i].text}`;
+				myStatusBarItem.show();	
+			} else {
+				clearStatusBarItem();
+			}
+		} 
 	}
-
 }
 
+/**
+ * @description Clear text and hide statusBarItem.
+ * @returns
+ */
 function clearStatusBarItem() {
-    const sbi = myStatusBarItem;
-    sbi.text = '';
-    sbi.hide();
+    myStatusBarItem.text = '';
+    myStatusBarItem.hide();
 }
 
+/**
+ * @description Get line number of active cursor position.
+ * @param editor
+ * @returns line number
+ */
 function getLineNumber(editor: vscode.TextEditor | undefined): number {
 	let line = 0;
 	if (editor) {
 		line = editor.selection.active.line;
 	}
 	return line;
+}
+
+/**
+ * @description Create an array of tabs including the start line and text label.
+ * @returns array of tabs
+ */
+function getTabs(): Array<Tab> {
+
+	if (!vscode.window.activeTextEditor) {
+		return [];
+	}
+
+	// regex returns the tab name in a capture group
+	const regEx = /# \[(.*)\]|---/gi;
+	const text = vscode.window.activeTextEditor.document.getText();
+	let tabs: Tab[] = [];
+	let match;
+
+	// add each regex match to the tabs array
+	while ((match = regEx.exec(text))) {
+    	const { positionAt } = vscode.window.activeTextEditor.document;
+    	const startPos = positionAt(match.index);
+		tabs.push({"line": startPos.line, "text": match[1]});
+	}
+	return tabs;
 }
