@@ -7,26 +7,30 @@ import {
   getGutterIndicatorWidth,
 } from './configuration';
 import { Logger } from './logging';
-import { Area, colors, GutterSVGs } from './models';
+import { Area, colors, GutterSVGs, SwitcherTypes } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: vscode.TextEditorDecorationType[] = [];
 
 const patterns = {
-  metadata: /---[\S\s].*:[.\S\s]*?---[\S\s]/,
-  tabs: /# \[(.*)\]|---[\n\r]/gi,
-  zones: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi
+  tabs: {
+    regex: /# \[(.*)\]|(?<=#)---[\n\r]/gi,
+    name: SwitcherTypes.tabs
+  },
+  zones: {
+    regex: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi,
+    name: SwitcherTypes.zones
+  }
 };
 
-function getSectionPattern(text: string, patterns: any) {
-  let pattern;
+function getPattern(text: string, patterns: any) {
 
-  if(patterns.tabs.test(text)) {
+  let pattern = {};
+
+  if(patterns.tabs.regex.test(text)) {
     pattern = patterns.tabs;
-  } else if(patterns.zones.test(text)) {
+  } else if(patterns.zones.regex.test(text)) {
     pattern = patterns.zones;
-  } else {
-    pattern = false;
   }
 
   return pattern;
@@ -45,23 +49,42 @@ export function updateDecorations() {
     return;
   }
 
+  // // The tabs regex will first match against the "---" metadata delimiters.
+  // // This flag keeps track of when the decoration logic has seen the 
+  // // first instance of a tab section (ex "# [JavaScript](tab/javascript)"), 
+  // // and processes the regex matches from there. Stated another way,
+  // // this flag lets the decoration logic skip metadata tokens.
+  // let hasEvaluatedFirstSection = false;
+
+  // function shouldSkipDecoration(pattern: any, match: any) {
+  //   let value = false;
+  //   if(pattern.name === SwitcherTypes.tabs && !hasEvaluatedFirstSection) {
+  //     let [token] = match;
+  //     hasEvaluatedFirstSection = !/---/.test(token);
+  //     if(!hasEvaluatedFirstSection) {
+  //       value = true;
+  //     }
+  //   }
+  //   return value;
+  // }
+
   const fileName = activeTextEditor.document.fileName;
   const text = activeTextEditor.document.getText();
-  const regEx = getSectionPattern(text, patterns);
+  const pattern = getPattern(text, patterns) as any;
+  const regEx = pattern.regex;
   let areas: Area[] = [];
   let match;
-  Logger.info(`Setting Gutters to ${fileName}`);
 
-  let skipper = 0;
+  Logger.info(`Decorating gutters on: ${fileName}`);
+
+  const decorator: any = {
+    tabs: getDecorationsForTabs,
+    zones: getDecorationsForZones
+  };
+
   while ((match = regEx.exec(text))) {
-    // TODO: This is a hack.
-    // Skip the first 2 matches, because our regEx isn't excluding the top metadata
-    skipper++;
-    if (skipper <= 2) {
-      continue;
-    }
 
-    const { decorationOptions, decorationType, color } = getDecorations(activeTextEditor, match);
+    const { decorationOptions, decorationType, color } = decorator[pattern.name](activeTextEditor, match);
     areas.push({ decorationOptions, decorationType, color });
   }
   areas = extendAreaToCoverEntireRange(areas);
@@ -69,12 +92,22 @@ export function updateDecorations() {
 }
 
 /**
+ * @description Find the start and end positions where we match the regEx for the zone area.
+ * @param activeTextEditor
+ * @param match The regEx to match
+ * @returns
+ */
+ function getDecorationsForZones(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
+   // TODO: implement decorations for zone pivots
+ }
+
+/**
  * @description Find the start and end positions where we match the regEx for the tab area.
  * @param activeTextEditor
  * @param match The regEx to match
  * @returns
  */
-function getDecorations(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
+function getDecorationsForTabs(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
   const { positionAt } = activeTextEditor.document;
   const startPos = positionAt(match.index);
   const endPos = positionAt(match.index + match[0].length);
@@ -94,6 +127,7 @@ function getDecorations(activeTextEditor: vscode.TextEditor, match: RegExpExecAr
     gutterIconPath: createIcon(color, GutterSVGs.startIcon),
     gutterIconSize: 'auto',
   });
+
   return { decorationOptions, decorationType, color };
 }
 
