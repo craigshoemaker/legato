@@ -63,16 +63,7 @@ function updateDecorations() {
 
   Logger.info(`Decorating gutters on: ${fileName}`);
 
-  switch (pattern.name) {
-    case SwitcherTypes.zones:
-      pattern.getDecorations = getDecorationsForZones;
-      break;
-
-    case SwitcherTypes.tabs:
-    default:
-      pattern.getDecorations = getDecorationsForTabs;
-      break;
-  }
+  pattern.getDecorations = getDecorationsFunction(pattern.name);
 
   while ((match = regEx.exec(text))) {
     const { decorationOptions, decorationType, color } = pattern.getDecorations(
@@ -83,6 +74,23 @@ function updateDecorations() {
   }
   areas = extendAreaToCoverEntireRange(areas);
   applyGutters(areas);
+}
+
+/**
+ *
+ * @description Determine and return the appropriate decoration function
+ * @param switcherType The type of switcher that we'll decorate
+ * @returns the appropriate function for the switcher
+ */
+function getDecorationsFunction(switcherType: SwitcherTypes) {
+  switch (switcherType) {
+    case SwitcherTypes.zones:
+      return getDecorationsForZones;
+
+    case SwitcherTypes.tabs:
+    default:
+      return getDecorationsForTabs;
+  }
 }
 
 /**
