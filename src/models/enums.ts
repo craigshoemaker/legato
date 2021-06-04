@@ -9,3 +9,8 @@ export enum AllSettings {
   gutterIndicatorOpacity = 'gutterIndicatorOpacity',
   gutterIndicatorWidth = 'gutterIndicatorWidth',
 }
+
+export enum SwitcherTypes {
+  tabs = 'tabs',
+  zones = 'zones',
+}
