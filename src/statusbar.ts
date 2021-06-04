@@ -18,13 +18,11 @@ export function updateStatusBarItem() {
         statusText = `$(milestone) Tab: ${tabs[i].text}`;
         myStatusBarItem.text = statusText;
         myStatusBarItem.show();
-        console.log(`show statusbar ${statusText}`);
         break;
       }
     }
   }
   if (!statusText) {
-    console.log(`clear statusbar`);
     clearStatusBarItem();
   }
 }

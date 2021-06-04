@@ -37,7 +37,7 @@ function addEventHandlers() {
       activeTextEditor = editor;
       if (editor) {
         triggerUpdateDecorations();
-        updateStatusBarItem();
+        // updateStatusBarItem();
       }
     },
     null,
@@ -47,7 +47,7 @@ function addEventHandlers() {
   vscode.workspace.onDidChangeTextDocument(
     event => {
       if (activeTextEditor && event.document === activeTextEditor.document) {
-        triggerUpdateDecorations();
+        // triggerUpdateDecorations();
       }
     },
     null,
@@ -55,8 +55,8 @@ function addEventHandlers() {
   );
 
   vscode.window.onDidChangeTextEditorSelection(
-    event => {  
-      updateStatusBarItem();  
+    event => {
+      updateStatusBarItem();
     },
     null,
     context.subscriptions,
