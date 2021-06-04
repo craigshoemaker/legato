@@ -4,7 +4,7 @@ import { AreaPattern, AreaPatternTypes } from './interfaces';
 
 export const patternTypes: AreaPatternTypes = {
   tabs: {
-    regex: /# \[(.*)\]|---[\n\r]/gi,
+    regex: /# \[(.*)\]|(?<=#[.\S\s]*)---[\n\r]/g,
     // regex: /# \[(.*)\]|(?<=#)---[\n\r]/gi,
     name: SwitcherTypes.tabs,
   },
