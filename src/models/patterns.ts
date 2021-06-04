@@ -1,8 +1,13 @@
 import * as vscode from 'vscode';
-import { SwitcherTypes } from './enums';
-import { AreaPattern, AreaPatternTypes } from './interfaces';
+import { Switchers } from './enums';
+import { AreaPattern } from './interfaces';
 
-export const patternTypes: AreaPatternTypes = {
+type PatternSetType = {
+  tabs: AreaPattern;
+  zones: AreaPattern;
+};
+
+export const patterns: PatternSetType = {
   tabs: {
     /*
       A two part expression, separated by the OR (|) operator.
@@ -35,22 +40,24 @@ export const patternTypes: AreaPatternTypes = {
       flags:        global and case insensitive
     */
     regex: /# \[(.*)\]|(?<=(# [.\S\s]*))---[\n\r]/gi,
-    name: SwitcherTypes.tabs,
+    name: Switchers.tabs,
   },
   zones: {
-    regex: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi,
-    name: SwitcherTypes.zones,
+    regex: /::: ?zone.pivot="(.*)"[\S\s.]|::: ?zone-end/gi,
+    name: Switchers.zones,
   },
 };
 
-export function getPattern(text: string, patternTypes: AreaPatternTypes) {
-  const { tabs, zones } = patternTypes;
+export function getPattern(text: string) {
+  const { tabs, zones } = patterns;
   let areaPattern: AreaPattern = tabs; // default
 
   if (tabs.regex.test(text)) {
     areaPattern = tabs;
+    tabs.regex.lastIndex = 0;
   } else if (zones.regex.test(text)) {
     areaPattern = zones;
+    zones.regex.lastIndex = 0;
   }
 
   return areaPattern;

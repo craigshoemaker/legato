@@ -10,7 +10,7 @@ export enum AllSettings {
   gutterIndicatorWidth = 'gutterIndicatorWidth',
 }
 
-export enum SwitcherTypes {
+export enum Switchers {
   tabs = 'tabs',
   zones = 'zones',
 }
