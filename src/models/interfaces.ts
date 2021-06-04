@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Switchers } from './enums';
 
-export interface Tab {
+export interface LabelInfo {
   line: number;
   text: string;
 }
@@ -16,6 +16,7 @@ export interface AreaDecoration {
 export type DecoratorFunction = (
   activeTextEditor: vscode.TextEditor,
   match: RegExpExecArray,
+  previousDecoration?: AreaDecoration,
 ) => AreaDecoration;
 
 export interface AreaPattern {
