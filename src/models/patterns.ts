@@ -43,7 +43,7 @@ export const patternTypes: AreaPatternTypes = {
   },
 };
 
-export function getPattern(text: string, patternTypes: AreaPatternTypes) {
+export function getPattern(text: string) {
   const { tabs, zones } = patternTypes;
   let areaPattern: AreaPattern = tabs; // default
 

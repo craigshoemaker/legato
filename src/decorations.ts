@@ -55,7 +55,7 @@ function updateDecorations() {
 
   const fileName = activeTextEditor.document.fileName;
   const text = activeTextEditor.document.getText();
-  const pattern = getPattern(text, patternTypes);
+  const pattern = getPattern(text);
   const regEx = pattern.regex;
   let areas: Area[] = [];
   let match;
