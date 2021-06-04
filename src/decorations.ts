@@ -1,4 +1,3 @@
-import * as vscode from 'vscode';
 import {
   DecorationOptions,
   Range,
@@ -15,15 +14,7 @@ import {
 } from './configuration';
 import { isValidFile } from './document';
 import { Logger } from './logging';
-import {
-  Area,
-  colors,
-  GutterSVGs,
-  getPattern,
-  patternTypes,
-  Decoration,
-  SwitcherTypes,
-} from './models';
+import { Area, colors, GutterSVGs, getPattern, Decoration, SwitcherTypes } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: TextEditorDecorationType[] = [];
