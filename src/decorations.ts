@@ -1,5 +1,12 @@
 import * as vscode from 'vscode';
-import { Uri } from 'vscode';
+import {
+  DecorationOptions,
+  Range,
+  TextEditor,
+  TextEditorDecorationType,
+  Uri,
+  window,
+} from 'vscode';
 import {
   getGutterIndicatorHeight,
   getGutterIndicatorOffset,
@@ -8,12 +15,23 @@ import {
 } from './configuration';
 import { isValidFile } from './document';
 import { Logger } from './logging';
-import { Area, colors, GutterSVGs, SwitcherTypes } from './models';
+import {
+  Area,
+  colors,
+  GutterSVGs,
+  getPattern,
+  patternTypes,
+  Decoration,
+  SwitcherTypes,
+} from './models';
 
 let nextColorIndex = 0;
-let scopeDecorations: vscode.TextEditorDecorationType[] = [];
+let scopeDecorations: TextEditorDecorationType[] = [];
 let timeout: NodeJS.Timer | undefined = undefined;
 
+/**
+ * @description Trigger the decorations after a timeout delay
+ */
 export function triggerUpdateDecorations() {
   if (timeout) {
     clearTimeout(timeout);
@@ -22,34 +40,11 @@ export function triggerUpdateDecorations() {
   timeout = setTimeout(updateDecorations, 500);
 }
 
-const patterns = {
-  tabs: {
-    regex: /# \[(.*)\]|(?<=#)---[\n\r]/gi,
-    name: SwitcherTypes.tabs,
-  },
-  zones: {
-    regex: /:::zone.pivot="(.*)"[\S\s.]|:::zone-end/gi,
-    name: SwitcherTypes.zones,
-  },
-};
-
-function getPattern(text: string, patterns: any) {
-  let pattern = {};
-
-  if (patterns.tabs.regex.test(text)) {
-    pattern = patterns.tabs;
-  } else if (patterns.zones.regex.test(text)) {
-    pattern = patterns.zones;
-  }
-
-  return pattern;
-}
-
 /**
  * @description Find the matches for the tokens. Create a range using the line numbers. Then decorate the range using the pre-defined colors.
  */
 function updateDecorations() {
-  let { activeTextEditor } = vscode.window;
+  let { activeTextEditor } = window;
   disposeScopeDecorations();
   nextColorIndex = 0;
 
@@ -60,20 +55,26 @@ function updateDecorations() {
 
   const fileName = activeTextEditor.document.fileName;
   const text = activeTextEditor.document.getText();
-  const pattern = getPattern(text, patterns) as any;
+  const pattern = getPattern(text, patternTypes);
   const regEx = pattern.regex;
   let areas: Area[] = [];
   let match;
 
   Logger.info(`Decorating gutters on: ${fileName}`);
 
-  const decorator: any = {
-    tabs: getDecorationsForTabs,
-    zones: getDecorationsForZones,
-  };
+  switch (pattern.name) {
+    case SwitcherTypes.zones:
+      pattern.getDecorations = getDecorationsForZones;
+      break;
+
+    case SwitcherTypes.tabs:
+    default:
+      pattern.getDecorations = getDecorationsForTabs;
+      break;
+  }
 
   while ((match = regEx.exec(text))) {
-    const { decorationOptions, decorationType, color } = decorator[pattern.name](
+    const { decorationOptions, decorationType, color } = pattern.getDecorations(
       activeTextEditor,
       match,
     );
@@ -89,8 +90,34 @@ function updateDecorations() {
  * @param match The regEx to match
  * @returns
  */
-function getDecorationsForZones(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
+function getDecorationsForZones(activeTextEditor: TextEditor, match: RegExpExecArray): Decoration {
   // TODO: implement decorations for zone pivots
+  const { positionAt } = activeTextEditor.document;
+  const startPos = positionAt(match.index);
+  const endPos = positionAt(match.index + match[0].length);
+
+  const hoverMessage = match.length > 1 ? match[1] : match[0];
+
+  // Create the deco options using the range.
+  const decorationOptions: DecorationOptions = {
+    range: new Range(startPos, endPos),
+    hoverMessage: hoverMessage,
+  };
+
+  const color = getColor();
+
+  // Set the color for the gutterIcon to rotate through our color constants.
+  const decorationType = window.createTextEditorDecorationType({
+    gutterIconPath: createIcon(color, GutterSVGs.startIcon),
+    gutterIconSize: 'auto',
+  });
+
+  const decoration: Decoration = {
+    decorationOptions,
+    decorationType,
+    color,
+  };
+  return decoration;
 }
 
 /**
@@ -99,7 +126,7 @@ function getDecorationsForZones(activeTextEditor: vscode.TextEditor, match: RegE
  * @param match The regEx to match
  * @returns
  */
-function getDecorationsForTabs(activeTextEditor: vscode.TextEditor, match: RegExpExecArray) {
+function getDecorationsForTabs(activeTextEditor: TextEditor, match: RegExpExecArray): Decoration {
   const { positionAt } = activeTextEditor.document;
   const startPos = positionAt(match.index);
   const endPos = positionAt(match.index + match[0].length);
@@ -107,15 +134,15 @@ function getDecorationsForTabs(activeTextEditor: vscode.TextEditor, match: RegEx
   const hoverMessage = match.length > 1 ? match[1] : match[0];
 
   // Create the deco options using the range.
-  const decorationOptions = {
-    range: new vscode.Range(startPos, endPos),
+  const decorationOptions: DecorationOptions = {
+    range: new Range(startPos, endPos),
     hoverMessage: hoverMessage,
   };
 
   const color = getColor();
 
   // Set the color for the gutterIcon to rotate through our color constants.
-  const decorationType = vscode.window.createTextEditorDecorationType({
+  const decorationType = window.createTextEditorDecorationType({
     gutterIconPath: createIcon(color, GutterSVGs.startIcon),
     gutterIconSize: 'auto',
   });
@@ -138,7 +165,7 @@ function getColor() {
  * @param areas The areas (ranges and decorations) to apply to the gutters
  */
 function applyGutters(areas: Area[]) {
-  let { activeTextEditor } = vscode.window;
+  let { activeTextEditor } = window;
   areas.forEach(area => {
     scopeDecorations.push(area.decorationType);
     activeTextEditor?.setDecorations(area.decorationType, [area.decorationOptions]);
@@ -208,13 +235,13 @@ function extendAreaToCoverEntireRange(areas: Area[]) {
 
       // Create the deco options using the range.
       const decorationOptions = {
-        range: new vscode.Range(startLine + 1, 0, line - 1, 0),
+        range: new Range(startLine + 1, 0, line - 1, 0),
         hoverMessage: previousArea.decorationOptions.hoverMessage,
       };
 
       // Set the color for the gutterIcon to rotate through our color constants.
       const { color } = previousArea;
-      const decorationType = vscode.window.createTextEditorDecorationType({
+      const decorationType = window.createTextEditorDecorationType({
         gutterIconPath: createIcon(color, GutterSVGs.defaultIcon),
         gutterIconSize: 'auto',
       });

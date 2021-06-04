@@ -4,6 +4,7 @@ import { extensionId } from './constants';
 export * from './constants';
 export * from './enums';
 export * from './interfaces';
+export * from './patterns';
 export * from './state';
 
 export function getExtension() {
