@@ -49,25 +49,6 @@ export function updateDecorations() {
     return;
   }
 
-  // // The tabs regex will first match against the "---" metadata delimiters.
-  // // This flag keeps track of when the decoration logic has seen the 
-  // // first instance of a tab section (ex "# [JavaScript](tab/javascript)"), 
-  // // and processes the regex matches from there. Stated another way,
-  // // this flag lets the decoration logic skip metadata tokens.
-  // let hasEvaluatedFirstSection = false;
-
-  // function shouldSkipDecoration(pattern: any, match: any) {
-  //   let value = false;
-  //   if(pattern.name === SwitcherTypes.tabs && !hasEvaluatedFirstSection) {
-  //     let [token] = match;
-  //     hasEvaluatedFirstSection = !/---/.test(token);
-  //     if(!hasEvaluatedFirstSection) {
-  //       value = true;
-  //     }
-  //   }
-  //   return value;
-  // }
-
   const fileName = activeTextEditor.document.fileName;
   const text = activeTextEditor.document.getText();
   const pattern = getPattern(text, patterns) as any;
