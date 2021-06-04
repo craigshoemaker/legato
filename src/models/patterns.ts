@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { Switchers } from './enums';
 import { AreaPattern } from './interfaces';
 
-export const patternTypes = {
+const patternTypes = {
   tabs: {
     /*
       A two part expression, separated by the OR (|) operator.
