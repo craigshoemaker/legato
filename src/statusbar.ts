@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { isValidFile } from './document';
-import { patterns, Tab } from './models';
+import { patterns, LabelInfo, Switchers } from './models';
 
 const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
 
@@ -13,24 +13,49 @@ export function updateStatusBarItem() {
     clearStatusBarItem();
     return;
   }
-
-  const tabs = getTabs();
-  const currentLine = getLineNumber(vscode.window.activeTextEditor);
   let statusText = '';
 
-  for (let i = 0; i < tabs.length - 1; i++) {
-    if (tabs[i].line <= currentLine && currentLine < tabs[i + 1].line) {
-      if (tabs[i].text) {
-        statusText = `$(milestone) Tab: ${tabs[i].text}`;
+  clearStatusBarItem();
+
+  const tabInfo = getTabInfo();
+  statusText = applyStatusBar(tabInfo);
+  if (statusText) {
+    return;
+  }
+
+  const zoneInfo = getZoneInfo();
+  statusText = applyStatusBar(zoneInfo);
+}
+
+function getTabInfo() {
+  let matches = getMatchData(patterns.tabs.regex);
+  let currentLine = getLineNumber(vscode.window.activeTextEditor);
+  let label = Switchers.tabs;
+  return { matches, currentLine, label };
+}
+
+function getZoneInfo() {
+  let matches = getMatchData(patterns.zones.regex);
+  let currentLine = getLineNumber(vscode.window.activeTextEditor);
+  let label = Switchers.zones;
+  return { matches, currentLine, label };
+}
+
+function applyStatusBar(statusInfo: { matches: LabelInfo[]; currentLine: number; label: string }) {
+  let statusText: string = '';
+  const { matches, currentLine, label } = statusInfo;
+
+  for (let i = 0; i < matches.length - 1; i++) {
+    if (matches[i].line <= currentLine && currentLine < matches[i + 1].line) {
+      if (matches[i].text) {
+        statusText = `$(milestone) ${label}: ${matches[i].text}`;
         myStatusBarItem.text = statusText;
         myStatusBarItem.show();
         break;
       }
     }
   }
-  if (!statusText) {
-    clearStatusBarItem();
-  }
+  return statusText;
 }
 
 /**
@@ -56,25 +81,24 @@ function getLineNumber(editor: vscode.TextEditor | undefined): number {
 }
 
 /**
- * @description Create an array of tabs including the start line and text label.
- * @returns array of tabs
+ * @description Create an array of tabs or zones including the start line and text label.
+ * @returns array of tabs or zones (LabelInfo[])
  */
-function getTabs(): Array<Tab> {
+function getMatchData(regEx: RegExp): Array<LabelInfo> {
   if (!vscode.window.activeTextEditor) {
     return [];
   }
 
-  // regex returns the tab name in a capture group
-  const regEx = patterns.tabs.regex;
+  // regex returns the zone name in a capture group
   const text = vscode.window.activeTextEditor.document.getText();
-  let tabs: Tab[] = [];
+  let matches: LabelInfo[] = [];
   let match: RegExpExecArray | null;
 
-  // add each regex match to the tabs array
+  // add each regex match to the zones array
   while ((match = regEx.exec(text))) {
     const { positionAt } = vscode.window.activeTextEditor.document;
     const startPos = positionAt(match.index);
-    tabs.push({ line: startPos.line, text: match[1] });
+    matches.push({ line: startPos.line, text: match[1] });
   }
-  return tabs;
+  return matches;
 }

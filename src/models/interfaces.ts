@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { Switchers } from './enums';
 
-export interface Tab {
+export interface LabelInfo {
   line: number;
   text: string;
 }
