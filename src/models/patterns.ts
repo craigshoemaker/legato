@@ -49,8 +49,10 @@ export function getPattern(text: string) {
 
   if (tabs.regex.test(text)) {
     areaPattern = tabs;
+    tabs.regex.lastIndex = 0;
   } else if (zones.regex.test(text)) {
     areaPattern = zones;
+    zones.regex.lastIndex = 0;
   }
 
   return areaPattern;

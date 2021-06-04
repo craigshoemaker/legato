@@ -57,6 +57,7 @@ function updateDecorations() {
   const text = activeTextEditor.document.getText();
   const pattern = getPattern(text);
   const regEx = pattern.regex;
+  regEx.lastIndex = 0; // Reset for searching
   let areas: Area[] = [];
   let match;
 
@@ -73,7 +74,6 @@ function updateDecorations() {
       break;
   }
 
-  regEx.lastIndex = 0; // Reset the regex to start the search from 0
   while ((match = regEx.exec(text))) {
     const { decorationOptions, decorationType, color } = pattern.getDecorations(
       activeTextEditor,
