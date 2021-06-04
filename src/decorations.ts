@@ -96,7 +96,7 @@ function getDecorationsForZones(activeTextEditor: TextEditor, match: RegExpExecA
   // TODO: implement decorations for zone pivots
   const { positionAt } = activeTextEditor.document;
   const startPos = positionAt(match.index);
-  const endPos = positionAt(match.index + match[0].length);
+  const endPos = positionAt(match.index + match[0].length - 1);
 
   const hoverMessage = match.length > 1 ? match[1] : match[0];
 
