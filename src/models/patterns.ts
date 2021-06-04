@@ -6,14 +6,14 @@ export const patternTypes: AreaPatternTypes = {
   tabs: {
     /*
       A two part expression, separated by the OR (|) operator.
-            
+
       == PART 1: ==== /# \[(.*)\] ====================
         Match all the tab definitions and captures
         the tab labels for display.
       ================================================
-      #             a sigle pound sign and single space
+      #             a single pound sign and single space
       \[            open square bracket
-      (.*)          unlimited series of non-line break charaters in a caputre group (the tab label)
+      (.*)          unlimited series of non-line break characters in a capture group (the tab label)
       \]            close square bracket
 
       == PART 2: ==== | ==============================
