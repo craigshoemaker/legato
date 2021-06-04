@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { isValidFile } from './document';
-import { Tab } from './models';
+import { patterns, Tab } from './models';
 
 const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
 
@@ -65,10 +65,10 @@ function getTabs(): Array<Tab> {
   }
 
   // regex returns the tab name in a capture group
-  const regEx = /# \[(.*)\]|---/gi;
+  const regEx = patterns.tabs.regex;
   const text = vscode.window.activeTextEditor.document.getText();
   let tabs: Tab[] = [];
-  let match;
+  let match: RegExpExecArray | null;
 
   // add each regex match to the tabs array
   while ((match = regEx.exec(text))) {
@@ -77,7 +77,4 @@ function getTabs(): Array<Tab> {
     tabs.push({ line: startPos.line, text: match[1] });
   }
   return tabs;
-}
-function matchesFileType(languageId: any) {
-  throw new Error('Function not implemented.');
 }
