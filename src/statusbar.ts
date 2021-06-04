@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { isValidFile } from './document';
 import { Tab } from './models';
 
 const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -8,6 +9,11 @@ const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignm
  * @returns
  */
 export function updateStatusBarItem() {
+  if (!isValidFile()) {
+    clearStatusBarItem();
+    return;
+  }
+
   const tabs = getTabs();
   const currentLine = getLineNumber(vscode.window.activeTextEditor);
   let statusText = '';
@@ -71,4 +77,7 @@ function getTabs(): Array<Tab> {
     tabs.push({ line: startPos.line, text: match[1] });
   }
   return tabs;
+}
+function matchesFileType(languageId: any) {
+  throw new Error('Function not implemented.');
 }

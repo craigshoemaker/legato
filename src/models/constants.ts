@@ -17,3 +17,5 @@ export const colors = [
   { name: 'Purple', value: '#832561' },
   { name: 'Light Blue', value: '#61dafb' },
 ];
+
+export const fileTypes = ['markdown'];
