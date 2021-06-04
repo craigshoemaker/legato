@@ -6,11 +6,21 @@ import {
   getGutterIndicatorOpacity,
   getGutterIndicatorWidth,
 } from './configuration';
+import { isValidFile } from './document';
 import { Logger } from './logging';
 import { Area, colors, GutterSVGs, SwitcherTypes } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: vscode.TextEditorDecorationType[] = [];
+let timeout: NodeJS.Timer | undefined = undefined;
+
+export function triggerUpdateDecorations() {
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = undefined;
+  }
+  timeout = setTimeout(updateDecorations, 500);
+}
 
 const patterns = {
   tabs: {
@@ -40,12 +50,13 @@ function getPattern(text: string, patterns: any) {
 /**
  * @description Find the matches for the tokens. Create a range using the line numbers. Then decorate the range using the pre-defined colors.
  */
-export function updateDecorations() {
+function updateDecorations() {
   let { activeTextEditor } = vscode.window;
   disposeScopeDecorations();
   nextColorIndex = 0;
 
-  if (!activeTextEditor) {
+  if (!activeTextEditor || !isValidFile()) {
+    console.log('not a valid file');
     return;
   }
 

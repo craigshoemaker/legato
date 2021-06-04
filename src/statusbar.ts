@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { isValidFile } from './document';
 import { Tab } from './models';
 
 const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
@@ -8,20 +9,28 @@ const myStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignm
  * @returns
  */
 export function updateStatusBarItem() {
+  if (!isValidFile()) {
+    clearStatusBarItem();
+    return;
+  }
 
-	const tabs = getTabs();
-    const n = getLineNumber(vscode.window.activeTextEditor);
+  const tabs = getTabs();
+  const currentLine = getLineNumber(vscode.window.activeTextEditor);
+  let statusText = '';
 
-	for (let i = 0; i < tabs.length - 1; i++) {
-		if (tabs[i].line <= n && n < tabs[i+1].line) {
-			if (tabs[i].text) {
-				myStatusBarItem.text = `$(milestone) Tab: ${tabs[i].text}`;
-				myStatusBarItem.show();	
-			} else {
-				clearStatusBarItem();
-			}
-		} 
-	}
+  for (let i = 0; i < tabs.length - 1; i++) {
+    if (tabs[i].line <= currentLine && currentLine < tabs[i + 1].line) {
+      if (tabs[i].text) {
+        statusText = `$(milestone) Tab: ${tabs[i].text}`;
+        myStatusBarItem.text = statusText;
+        myStatusBarItem.show();
+        break;
+      }
+    }
+  }
+  if (!statusText) {
+    clearStatusBarItem();
+  }
 }
 
 /**
@@ -29,8 +38,8 @@ export function updateStatusBarItem() {
  * @returns
  */
 function clearStatusBarItem() {
-    myStatusBarItem.text = '';
-    myStatusBarItem.hide();
+  myStatusBarItem.text = '';
+  myStatusBarItem.hide();
 }
 
 /**
@@ -39,11 +48,11 @@ function clearStatusBarItem() {
  * @returns line number
  */
 function getLineNumber(editor: vscode.TextEditor | undefined): number {
-	let line = 0;
-	if (editor) {
-		line = editor.selection.active.line;
-	}
-	return line;
+  let line = 0;
+  if (editor) {
+    line = editor.selection.active.line;
+  }
+  return line;
 }
 
 /**
@@ -51,22 +60,24 @@ function getLineNumber(editor: vscode.TextEditor | undefined): number {
  * @returns array of tabs
  */
 function getTabs(): Array<Tab> {
+  if (!vscode.window.activeTextEditor) {
+    return [];
+  }
 
-	if (!vscode.window.activeTextEditor) {
-		return [];
-	}
+  // regex returns the tab name in a capture group
+  const regEx = /# \[(.*)\]|---/gi;
+  const text = vscode.window.activeTextEditor.document.getText();
+  let tabs: Tab[] = [];
+  let match;
 
-	// regex returns the tab name in a capture group
-	const regEx = /# \[(.*)\]|---/gi;
-	const text = vscode.window.activeTextEditor.document.getText();
-	let tabs: Tab[] = [];
-	let match;
-
-	// add each regex match to the tabs array
-	while ((match = regEx.exec(text))) {
-    	const { positionAt } = vscode.window.activeTextEditor.document;
-    	const startPos = positionAt(match.index);
-		tabs.push({"line": startPos.line, "text": match[1]});
-	}
-	return tabs;
+  // add each regex match to the tabs array
+  while ((match = regEx.exec(text))) {
+    const { positionAt } = vscode.window.activeTextEditor.document;
+    const startPos = positionAt(match.index);
+    tabs.push({ line: startPos.line, text: match[1] });
+  }
+  return tabs;
+}
+function matchesFileType(languageId: any) {
+  throw new Error('Function not implemented.');
 }

@@ -1,5 +1,5 @@
 {
-  "name": "legato",
+  "name": "vscode-legato",
   "displayName": "Legato",
   "description": "Visualizing content inside Microsoft Docs content switchers",
   "publisher": "craigshoemaker",
@@ -10,11 +10,25 @@
     "url": "https://github.com/craigshoemaker/legato.git"
   },
   "homepage": "https://github.com/craigshoemaker/legato/blob/main/README.md",
+  "icon": "resources/icon.png",
+  "galleryBanner": {
+    "color": "#373436",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.56.0"
   },
+  "keywords": [
+    "Markdown",
+    "Colors",
+    "Fun"
+  ],
   "categories": [
     "Other"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
   ],
   "activationEvents": [
     "*"
