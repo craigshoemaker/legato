@@ -75,6 +75,9 @@ function updateDecorations() {
   }
 }
 
+/**
+ * @description The decorator functions cannot be set until the code for this module starts. So we do that here.
+ */
 function setDecorationFunctions() {
   for (const key in Switchers) {
     patterns[Switchers.tabs].getDecorations = getDecorationsFunction(key as Switchers);
