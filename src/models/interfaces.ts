@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SwitcherTypes } from './enums';
+import { Switchers } from './enums';
 
 export interface Area {
   color: string;
@@ -25,6 +25,6 @@ export type DecoratorFunction = (
 
 export interface AreaPattern {
   regex: RegExp;
-  name: SwitcherTypes;
+  name: Switchers;
   getDecorations?: DecoratorFunction;
 }

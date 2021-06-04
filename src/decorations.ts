@@ -14,7 +14,7 @@ import {
 } from './configuration';
 import { isValidFile } from './document';
 import { Logger } from './logging';
-import { Area, colors, GutterSVGs, getPattern, Decoration, SwitcherTypes } from './models';
+import { Area, colors, GutterSVGs, getPattern, Decoration, Switchers } from './models';
 
 let nextColorIndex = 0;
 let scopeDecorations: TextEditorDecorationType[] = [];
@@ -73,12 +73,12 @@ function updateDecorations() {
  * @param switcherType The type of switcher that we'll decorate
  * @returns the appropriate function for the switcher
  */
-function getDecorationsFunction(switcherType: SwitcherTypes) {
+function getDecorationsFunction(switcherType: Switchers) {
   switch (switcherType) {
-    case SwitcherTypes.zones:
+    case Switchers.zones:
       return getDecorationsForZones;
 
-    case SwitcherTypes.tabs:
+    case Switchers.tabs:
     default:
       return getDecorationsForTabs;
   }

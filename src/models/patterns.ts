@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SwitcherTypes } from './enums';
+import { Switchers } from './enums';
 import { AreaPattern } from './interfaces';
 
 export const patternTypes = {
@@ -35,11 +35,11 @@ export const patternTypes = {
       flags:        global and case insensitive
     */
     regex: /# \[(.*)\]|(?<=(# [.\S\s]*))---[\n\r]/gi,
-    name: SwitcherTypes.tabs,
+    name: Switchers.tabs,
   },
   zones: {
     regex: /::: ?zone.pivot="(.*)"[\S\s.]|::: ?zone-end/gi,
-    name: SwitcherTypes.zones,
+    name: Switchers.zones,
   },
 };
 
