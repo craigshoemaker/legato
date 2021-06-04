@@ -5,6 +5,7 @@ import { workspace } from 'vscode';
 import { updateDecorations } from './gutters';
 import { Logger } from './logging';
 import { State } from './models';
+import { updateStatusBarItem } from './statusbar';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -20,7 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   if (activeTextEditor) {
     triggerUpdateDecorations();
+    updateStatusBarItem();
   }
+
 }
 
 let timeout: NodeJS.Timer | undefined = undefined;
@@ -34,6 +37,7 @@ function addEventHandlers() {
       activeTextEditor = editor;
       if (editor) {
         triggerUpdateDecorations();
+        updateStatusBarItem();
       }
     },
     null,
@@ -45,6 +49,14 @@ function addEventHandlers() {
       if (activeTextEditor && event.document === activeTextEditor.document) {
         triggerUpdateDecorations();
       }
+    },
+    null,
+    context.subscriptions,
+  );
+
+  vscode.window.onDidChangeTextEditorSelection(
+    event => {  
+      updateStatusBarItem();  
     },
     null,
     context.subscriptions,

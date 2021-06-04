@@ -5,3 +5,8 @@ export interface Area {
   decorationOptions: vscode.DecorationOptions;
   decorationType: vscode.TextEditorDecorationType;
 }
+
+export interface Tab {
+  line: number;
+  text: string;
+}
