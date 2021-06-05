@@ -9,6 +9,4 @@
 | gutterIndicatorOpacity | The opacity percentage of the gutter indicator.    | 60      |
 | gutterIndicatorWidth   | The width the of gutter indicator.                 | 4       |
 
-## Resources
 
-See the [🛠 Fix/Hack/Learn Project plan](../../issues/1).
