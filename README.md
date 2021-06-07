@@ -1,6 +1,6 @@
 # Docs Visual Areas
 
-Visualize content inside tabs and zones in Visual Studio Code.
+Visualize Microsoft Docs content inside tabs and zones in Visual Studio Code.
 
 ![Docs Visual Areas demo](/../main/resources/docs-visual-areas-demo.gif?raw=true "Docs Visual Areas demo")
 
