@@ -39,7 +39,7 @@ export const patterns: PatternSetType = {
 
       flags:        global and case insensitive
     */
-    regex: /# \[(.*)\]|(?<=(# [.\S\s]*))---[\n\r]/gi,
+    regex: /# \[(.*)\]|(?<=(# \[[.\S\s]*))---[\n\r]/gi,
     name: Switchers.tabs,
   },
   zones: {

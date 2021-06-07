@@ -2,6 +2,7 @@
 title: Bring dependencies
 ms.topic: article
 zone_pivot_groups: 'bring-third-party-dependency-programming-functions'
+# user intent statement: something fancy
 ---
 
 # Title
@@ -17,7 +18,7 @@ In this article
 
 ## subtitle
 
-::: zone pivot="javascript"
+::: zone pivot="JavaScript"
 One of the simplest:
 
 ```

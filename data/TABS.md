@@ -1,6 +1,7 @@
 ---
 title: 'Quickstart: Building your'
 ms.author: cshoe
+# user intent statement: something fancy
 ---
 
 # Title
