@@ -1,7 +1,7 @@
 {
   "name": "vscode-docs-visual-areas",
   "displayName": "Docs Visual Areas",
-  "description": "Visualizing content inside Microsoft Docs content switchers",
+  "description": "Visualize Microsoft Docs content inside tabs and zones in Visual Studio Code",
   "publisher": "craigshoemaker",
   "license": "SEE LICENSE IN LICENSE.md",
   "version": "0.0.1",
