@@ -2,7 +2,7 @@
 
 Visualize content inside tabs and zones in Visual Studio Code.
 
-![Animated demo](../../resources/docs-visual-areas-demo.gif)
+![Animated demo](../resources/docs-visual-areas-demo.gif)
 
 Easily keep track tabbed and zoned content with the following features:
 
