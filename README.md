@@ -1,4 +1,16 @@
-# Legato: Visualizing content inside tabs, zones, and switchers in Visual Studio Code.
+# Docs Visual Areas
+
+Visualize content inside tabs and zones in Visual Studio Code.
+
+![Animated demo](../../resources/docs-visual-areas-demo.gif)
+
+Easily keep track tabbed and zoned content with the following features:
+
+- **Color coded gutters**: Each tabbed or zoned section in your article gets a unique gutter color.
+
+- **Area tooltips**: Hovering over a line in a section reveals a tool tip with the area label.
+
+- **Status bar**: The status bar stays updated with the section name when your cursor is inside a tabbed or zoned section.
 
 ## Settings
 
