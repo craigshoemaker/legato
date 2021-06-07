@@ -22,3 +22,8 @@ Easily keep track tabbed and zoned content with the following features:
 | gutterIndicatorWidth   | The width the of gutter indicator.                 | 4       |
 
 
+## Contributors
+
+- [Kelly Gremban](https://github.com/kgremban)
+- [John Papa](https://github.com/johnpapa)
+- [Craig Shoemaker](https://github.com/craigshoemaker)
