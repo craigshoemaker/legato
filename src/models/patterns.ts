@@ -16,7 +16,7 @@ export const patterns: PatternSetType = {
         Match all the tab definitions and captures
         the tab labels for display.
       ================================================
-      #             a single pound sign and single space
+      # \[          a single pound sign, a single space, and an open square bracket
       \[            open square bracket
       (.*)          unlimited series of non-line break characters in a capture group (the tab label)
       \]            close square bracket
