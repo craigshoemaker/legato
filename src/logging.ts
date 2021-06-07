@@ -6,7 +6,7 @@ export class Logger {
   static initialize() {
     if (!this._outputChannel) {
       // Only init once
-      this._outputChannel = window.createOutputChannel('Legato');
+      this._outputChannel = window.createOutputChannel('Docs Visual Areas');
     }
   }
 

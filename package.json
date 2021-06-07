@@ -1,15 +1,15 @@
 {
-  "name": "vscode-legato",
-  "displayName": "Legato",
+  "name": "vscode-docs-visual-areas",
+  "displayName": "Docs Visual Areas",
   "description": "Visualizing content inside Microsoft Docs content switchers",
   "publisher": "craigshoemaker",
   "license": "SEE LICENSE IN LICENSE.md",
   "version": "0.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/craigshoemaker/legato.git"
+    "url": "https://github.com/craigshoemaker/docs-visual-areas.git"
   },
-  "homepage": "https://github.com/craigshoemaker/legato/blob/main/README.md",
+  "homepage": "https://github.com/craigshoemaker/docs-visual-areas/blob/main/README.md",
   "icon": "resources/icon.png",
   "galleryBanner": {
     "color": "#373436",
@@ -37,24 +37,24 @@
   "contributes": {
     "configuration": {
       "properties": {
-        "legato.gutterIndicatorHeight": {
+        "docs-visual-areas.gutterIndicatorHeight": {
           "type": "integer",
           "default": 100,
           "description": "The height the of gutter indicator."
         },
-        "legato.gutterIndicatorOffset": {
+        "docs-visual-areas.gutterIndicatorOffset": {
           "type": "integer",
           "default": 12,
           "maximum": 14,
           "description": "The offset from the left for the gutter indicator."
         },
-        "legato.gutterIndicatorOpacity": {
+        "docs-visual-areas.gutterIndicatorOpacity": {
           "type": "integer",
           "default": 60,
           "maximum": 100,
           "description": "The opacity percentage of the gutter indicator."
         },
-        "legato.gutterIndicatorWidth": {
+        "docs-visual-areas.gutterIndicatorWidth": {
           "type": "integer",
           "default": 4,
           "description": "The width the of gutter indicator."

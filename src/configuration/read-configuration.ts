@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { legatoSection, AllSettings } from '../models';
+import { visualAreasSection, AllSettings } from '../models';
 
 export function getGutterIndicatorHeight() {
   return readConfiguration<number>(AllSettings.gutterIndicatorHeight);
@@ -26,7 +26,7 @@ export function getGutterIndicatorWidth() {
 
 export function readConfiguration<T>(setting: AllSettings, defaultValue?: T | undefined) {
   const value: T | undefined = vscode.workspace
-    .getConfiguration(legatoSection)
+    .getConfiguration(visualAreasSection)
     .get<T | undefined>(setting, defaultValue);
   return value as T;
 }

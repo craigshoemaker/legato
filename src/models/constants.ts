@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 
-export const extensionShortName = 'legato';
-export const extensionId = 'craigshoemaker.vscode-legato';
-export const legatoSection = 'legato';
+export const extensionShortName = 'docs-visual-areas';
+export const extensionId = 'craigshoemaker.vscode-docs-visual-areas';
+export const visualAreasSection = 'docs-visual-areas';
 
 // export const timeout = async (ms = 200) => new Promise((resolve) => setTimeout(resolve, ms));
 
