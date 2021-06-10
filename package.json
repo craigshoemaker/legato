@@ -4,7 +4,7 @@
   "description": "Visualize Microsoft Docs content inside tabs and zones in Visual Studio Code",
   "publisher": "craig-shoemaker",
   "license": "SEE LICENSE IN LICENSE.md",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/craigshoemaker/vscode-docs-visual-areas.git"
