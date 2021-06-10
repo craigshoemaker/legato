@@ -1,7 +1,7 @@
 {
     "title": "Docs Visual Areas",
     "description": "Visualize Microsoft Docs content inside tabs and zones in Visual Studio Code",
-    "videoUrl": "",
+    "videoUrl": "https://youtu.be/LXLqH-MEH6o",
     "categories": ["Docs maintenance"],
     "languages": ["TypeScript"],
     "technologies": ["Visual Studio Code Extension"]
