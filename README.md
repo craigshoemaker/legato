@@ -19,6 +19,8 @@ Easily keep track tabbed and zoned content with the following features:
 
 - **Status bar**: The status bar stays updated with the section name when your cursor is inside a tabbed or zoned section.
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LXLqH-MEH6o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Settings
 
 | Property               | Description                                        | Default |
