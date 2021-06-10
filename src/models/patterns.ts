@@ -50,14 +50,14 @@ export const patterns: PatternSetType = {
 
 export function getPattern(text: string) {
   const { tabs, zones } = patterns;
-  let areaPattern: AreaPattern = tabs; // default
+  let areaPattern: AreaPattern = zones; // default
 
-  if (tabs.regex.test(text)) {
-    areaPattern = tabs;
-    tabs.regex.lastIndex = 0;
-  } else if (zones.regex.test(text)) {
+  if (zones.regex.test(text)) {
     areaPattern = zones;
     zones.regex.lastIndex = 0;
+  } else if (tabs.regex.test(text)) {
+    areaPattern = tabs;
+    tabs.regex.lastIndex = 0;
   }
 
   return areaPattern;
