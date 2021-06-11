@@ -32,8 +32,13 @@ Easily keep track tabbed and zoned content with the following features:
 | gutterIndicatorOpacity | The opacity percentage of the gutter indicator.    | 60      |
 | gutterIndicatorWidth   | The width the of gutter indicator.                 | 4       |
 
+## Known issues
+
+- [Tabs nested in zones are not separately decorated](https://github.com/craigshoemaker/vscode-docs-visual-areas/issues/40)
+
 ## Contributors
 
 - [Kelly Gremban](https://github.com/kgremban)
 - [John Papa](https://github.com/johnpapa)
 - [Craig Shoemaker](https://github.com/craigshoemaker)
+- [Glenn Gailey](https://github.com/ggailey777) (testing)
