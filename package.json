@@ -5,6 +5,7 @@
   "publisher": "craig-shoemaker",
   "license": "SEE LICENSE IN LICENSE.md",
   "version": "0.1.2",
+  "preview": true,
   "repository": {
     "type": "git",
     "url": "https://github.com/craigshoemaker/vscode-docs-visual-areas.git"
