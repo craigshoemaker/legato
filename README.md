@@ -1,4 +1,6 @@
-# Docs Visual Areas
+> # This tool is now a part of the [Docs Authoring Pack](https://github.com/microsoft/vscode-docs-authoring)! Please do not install this extension, or attempt to make any updates from this repo.
+
+## Docs Visual Areas
 
 Visualize Microsoft Docs content inside tabs and zones in Visual Studio Code.
 
